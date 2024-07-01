@@ -5,13 +5,15 @@ import {
   Home12Filled,
   PersonCircle12Filled
 } from '@vicons/fluent'
-
 const themeOverrides = {
   common: {
     primaryColor: '#377cf6'
   },
 }
 const dark = ref()
+const renderIcon =  (icon) => {
+  return () => h(NIcon, null, { default: () => h(icon) })
+}
 const menuOptions = [
   {
     label: "控制台",
@@ -33,10 +35,6 @@ const menuOptions = [
   }
 ];
 const collapsed = ref(false)
-
-const renderIcon =  (icon) => {
-  return () => h(NIcon, null, { default: () => h(icon) })
-}
 onMounted(()=>{
   setInterval(()=>{
     if(useOsTheme().value == 'dark'){
@@ -46,7 +44,6 @@ onMounted(()=>{
     }
   },100)
 })
-
 </script>
 
 <template>
@@ -69,7 +66,6 @@ onMounted(()=>{
               :collapsed-width="64"
               :collapsed-icon-size="22"
               :options="menuOptions"
-              :render-label="renderMenuLabel"
           />
         </n-layout-sider>
         <n-layout>
