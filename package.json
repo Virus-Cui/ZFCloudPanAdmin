@@ -10,11 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@vicons/ionicons5": "^0.12.0",
     "nuxt": "^3.12.2",
     "vue": "latest"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
   "devDependencies": {
+    "@vicons/fluent": "^0.12.0",
     "naive-ui": "^2.38.2",
     "sass": "^1.77.6",
     "unplugin-vue-components": "^0.27.2"
