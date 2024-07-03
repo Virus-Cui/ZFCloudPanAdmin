@@ -8,7 +8,7 @@ onMounted(()=>{
 </script>
 
 <template>
-
+正在跳转
 </template>
 
 <style scoped>
