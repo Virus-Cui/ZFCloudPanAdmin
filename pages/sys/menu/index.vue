@@ -4,7 +4,7 @@ import {ref, reactive, onMounted} from "vue";
 </script>
 
 <template>
-  <img  src="~/assets/img/logo-cloud.png" width="25" alt="">
+菜单管理
 </template>
 
 <style scoped>
