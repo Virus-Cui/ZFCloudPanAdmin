@@ -1,11 +1,13 @@
 <script setup>
 import {ref, reactive, onMounted} from "vue";
-
-const isMoved = ref(false)
+import { useOsTheme } from 'naive-ui'
+import { useThemeVars } from 'naive-ui'
+const isMoved = ref(useOsTheme().value != 'dark')
 
 const emits = defineEmits(['change'])
 
 onMounted(() => {
+  console.log('theme',useOsTheme().value != 'dark')
   let mainButton = $(".main-button"); //获取按钮主体
   console.log(mainButton)
   console.log('button', mainButton)
@@ -72,6 +74,55 @@ onMounted(() => {
     }, 500);
     isMoved.value = !isMoved.value;
   });
+
+    const theme = useThemeVars()
+
+  watch(()=>theme.value, ()=>{
+    if (theme.value.baseColor == '#FFF') {
+      //白天按钮样式
+      mainButton.style.transform = "translateX(0)"; //水平平移距离为0px
+      mainButton.style.backgroundColor = "rgba(255, 195, 35,1)"; //按钮主体的背景颜色变为黄色(太阳)
+      // 盒子阴影
+      mainButton.style.boxShadow = "3px 3px 5px rgba(0, 0, 0, 0.5), inset  -3px -5px 3px -3px rgba(0, 0, 0, 0.5), inset  4px 5px 2px -2px rgba(255, 230, 80,1)";
+      //云朵上升-云朵显示
+      daytimeBackgrond[0].style.transform = "translateX(0)";
+      daytimeBackgrond[1].style.transform = "translateX(0)";
+      daytimeBackgrond[2].style.transform = "translateX(0)";
+      cloud.style.transform = "translateY(10px)";
+      cloudLight.style.transform = "translateY(10px)";
+      components.style.backgroundColor = "rgba(70, 133, 192,1)"
+      //月亮陨石坑完全透明-隐藏
+      moon[0].style.opacity = "0";
+      moon[1].style.opacity = "0";
+      moon[2].style.opacity = "0";
+      //星星上升-星星隐藏
+      stars.style.transform = "translateY(-125px)";
+      stars.style.opacity = "0";
+      isMoved.value = false
+    } else {
+      //黑夜按钮样式
+      mainButton.style.transform = "translateX(110px)"; //水平平移距离为110px
+      mainButton.style.backgroundColor = "rgba(195, 200,210,1)"; //按钮主体的背景颜色变为黄色(月亮)
+      // 盒子阴影
+      mainButton.style.boxShadow = "3px 3px 5px rgba(0, 0, 0, 0.5), inset  -3px -5px 3px -3px rgba(0, 0, 0, 0.5), inset  4px 5px 2px -2px rgba(255, 255, 210,1)";
+      //云朵下降-云朵隐藏
+      daytimeBackgrond[0].style.transform = "translateX(110px)";
+      daytimeBackgrond[1].style.transform = "translateX(80px)";
+      daytimeBackgrond[2].style.transform = "translateX(50px)";
+      cloud.style.transform = "translateY(80px)";
+      cloudLight.style.transform = "translateY(80px)";
+      components.style.backgroundColor = "rgba(25,30,50,1)"
+      //月亮陨石坑完全不透明-显示
+      moon[0].style.opacity = "1";
+      moon[1].style.opacity = "1";
+      moon[2].style.opacity = "1";
+      //星星下降-星星显示
+      stars.style.transform = "translateY(-62.5px)";
+      stars.style.opacity = "1";
+      isMoved.value = true
+    }
+    //
+  })
 
 // 当鼠标挪入按钮时，按钮移动事件
   mainButton.addEventListener("mousemove", function () {

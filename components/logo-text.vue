@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted} from "vue";
+import { useThemeVars } from 'naive-ui'
+
 const dark = ref(false)
 onMounted(()=>{
-  let doc = document.querySelector('body');
+  const theme = useThemeVars()
   setInterval(()=>{
-   if(doc.getAttribute('style') != null && doc.getAttribute('style') == 'background-color: rgb(66, 66, 66);'){
-     dark.value = true
-   }else {
+   if(theme.value.baseColor == '#FFF'){
      dark.value = false
+   }else {
+     dark.value = true
    }
   },100)
 })
 </script>
 
 <template>
-  <img v-show="!dark" src="~/assets/img/logo-text-black.png" width="120" style="display: flex" alt="">
-  <img v-show="dark" src="~/assets/img/logo-text-white.png" width="120" style="display: flex" alt="">
+  <img v-if="!dark" src="~/assets/img/logo-text-black.png" width="120" style="display: flex" alt="">
+  <img v-else src="~/assets/img/logo-text-white.png" width="120" style="display: flex" alt="">
 </template>
 
 <style scoped>
