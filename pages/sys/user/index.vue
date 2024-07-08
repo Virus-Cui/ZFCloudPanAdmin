@@ -118,25 +118,50 @@ onMounted(()=>{
 
 <template>
   <div style="width: 100%;height: 100%;">
-    <div style="margin-bottom: 1rem;">
-      <n-button type="primary" @click="drawer.drawer.show()">
-        添加用户
-      </n-button>
-    </div>
-    <n-data-table
-        :loading="loading"
-        ref="tableRef"
-        striped
-        :columns="columns"
-        :pagination="pagination"
-        :bordered="false"
-        :data="tb_date"
-        :row-key="row => row.name"
-        remote
-        v-model:checked-row-keys="checkedRowKeys"
-        max-height="100%"
-    >
-    </n-data-table>
+    <n-card>
+      <template #header>
+        <n-skeleton v-if="loading" text width="60%" />
+        <template v-else>
+          操作
+        </template>
+      </template>
+      <n-skeleton v-if="loading" text :repeat="6" />
+      <template v-else>
+        <div>
+          <n-button type="primary" @click="drawer.drawer.show()">
+            添加用户
+          </n-button>
+        </div>
+      </template>
+    </n-card>
+    <n-card style="margin-top: 1rem;">
+      <template #header>
+        <n-skeleton v-if="loading" text width="60%" />
+        <template v-else>
+          查询结果
+        </template>
+      </template>
+      <n-skeleton v-if="loading" text :repeat="6" />
+      <template v-else>
+        <div>
+          <n-data-table
+              :loading="loading"
+              ref="tableRef"
+              striped
+              :columns="columns"
+              :pagination="pagination"
+              :bordered="false"
+              :data="tb_date"
+              :row-key="row => row.name"
+              remote
+              v-model:checked-row-keys="checkedRowKeys"
+              max-height="100%"
+          >
+          </n-data-table>
+        </div>
+      </template>
+    </n-card>
+
 
     <NewUserDrawer @success="init()" ref="drawer" />
   </div>

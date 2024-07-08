@@ -18,13 +18,14 @@ const drawer = reactive({
   close: ()=>{
     Object.assign(drawer.data, {
       username: '',
-      passwd: '',
+      password: '',
       email: ''
     })
     drawer.open = false
   },
   rules: {},
   submit: ()=>{
+    console.log(drawer.data)
     apis.new_user(drawer.data).then(res=>{
       drawer.close()
       emits('success')
@@ -43,13 +44,13 @@ defineExpose({
       <n-drawer-content :title="drawer.title">
         <n-form>
           <n-form-item label="用户名">
-            <n-input v-model="drawer.data.username" placeholder="请输入用户名"></n-input>
+            <n-input v-model:value="drawer.data.username" placeholder="请输入用户名"></n-input>
           </n-form-item>
           <n-form-item label="密码">
-            <n-input v-model="drawer.data.username" placeholder="请输入密码"></n-input>
+            <n-input v-model:value="drawer.data.password" placeholder="请输入密码"></n-input>
           </n-form-item>
           <n-form-item label="邮箱">
-            <n-input v-model="drawer.data.email" placeholder="请输入邮箱"></n-input>
+            <n-input v-model:value="drawer.data.email" placeholder="请输入邮箱"></n-input>
           </n-form-item>
         </n-form>
         <template #footer>

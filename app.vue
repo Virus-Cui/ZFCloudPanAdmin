@@ -5,11 +5,14 @@ const themeOverrides = theme
 </script>
 
 <template>
+  <n-config-provider :theme-overrides="themeOverrides">
     <n-loading-bar-provider>
       <NuxtLayout>
 
       </NuxtLayout>
     </n-loading-bar-provider>
+  </n-config-provider>
+
 </template>
 
 <style scoped>
