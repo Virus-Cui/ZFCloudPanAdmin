@@ -7,7 +7,9 @@ import axios from 'axios'
 import {useRouter} from "#app";
 import LogoSmall from "~/components/logo-small.vue";
 import {gen_router_paths} from "assets/utils/utils.js";
-
+import NuxtLink from "#app/components/nuxt-link.js";
+import {theme} from '~/assets/config/theme'
+const loading = ref(true)
 const router = useRouter();
 const path = ref()
 const arr = ref([]);
@@ -24,25 +26,25 @@ router.afterEach((to,from,next)=>{
   loadingBar.finish()
 })
 
-watch(router.currentRoute, (value, oldValue, onCleanup) => {
-  console.log(value.fullPath)
-  if (process.client) {
-    window.localStorage.setItem('path', value.fullPath)
-  }
-})
 
-const themeOverrides = {
-  common: {
-    primaryColor: '#377cf6'
-  },
-}
+const themeOverrides = theme
 const dark = ref()
 const renderIcon = (icon) => {
   return () => h(NIcon, null, {default: () => h(icon)})
 }
 
+watch(()=>router.currentRoute.value, ()=>{
+  console.log(router.currentRoute.value.fullPath)
+  setTimeout(()=>{
+    path.value = router.currentRoute.value.fullPath
+  }, 100)
+})
+
 const header = {
-  label: renderIcon(text),
+  label:
+      () => h(NuxtLink, {
+        to: '/'
+      }, renderIcon(text)),
   icon: renderIcon(LogoSmall)
 }
 const menuOptions = ref([])
@@ -50,10 +52,12 @@ const menuOptions = ref([])
 const collapsed = ref(false)
 let interval = ref()
 onMounted(async () => {
+  loading.value = true
   if (process.client) {
     console.log('lvar',loadingBar)
     loadingBar.start()
-    path.value = localStorage.getItem('path') == undefined ? '/dashboard' : localStorage.getItem('path')
+    path.value = router.currentRoute.value.fullPath
+    console.log('path', path.value)
   }
   console.log()
   await axios.get('http://127.0.0.1:8080/auth/menus').then(res => {
@@ -62,6 +66,7 @@ onMounted(async () => {
   let genRouterPaths = await gen_router_paths(arr.value);
   genRouterPaths.unshift(header)
   menuOptions.value = genRouterPaths
+  loading.value = false
   interval.value = setInterval(() => {
     if (useOsTheme().value == 'dark') {
       dark.value = darkTheme
@@ -100,7 +105,9 @@ const changeTheme = (mode) => {
               @collapse="collapsed = true"
               @expand="collapsed = false"
           >
+            <n-skeleton v-if="loading" :width="'100%'" :height="'100%'"  size="medium" />
             <n-menu
+                v-else
                 v-model:value="path"
                 :collapsed="collapsed"
                 :collapsed-width="64"
@@ -118,9 +125,8 @@ const changeTheme = (mode) => {
               </div>
             </n-layout-header>
             <n-layout-content bordered
-                              style="height: calc(100vh - 6rem);display: flex;align-items: center;padding: 1rem 1rem">
+                              style="height: calc(100vh - 6rem);display: flex;align-items: center;padding: 1rem 1rem;width: 100%;">
               <NuxtPage/>
-
             </n-layout-content>
             <n-layout-footer bordered style="height: 3rem;display: flex;align-items: center;padding: 0 0 0 1rem">Powered
               By Virus_Cui
@@ -132,9 +138,11 @@ const changeTheme = (mode) => {
 </template>
 
 <style scoped>
-:deep(.n-menu-item:nth-of-type(1) .n-menu-item-content.n-menu-item-content--selected::before) {
+:deep(.n-menu > .n-menu-item:first-child > .n-menu-item-content.n-menu-item-content--selected::before) {
   background: none;
 }
 
-
+:deep(.n-layout-scroll-container){
+  width: 100%;
+}
 </style>

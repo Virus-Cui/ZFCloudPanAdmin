@@ -1,15 +1,19 @@
 <script setup>
-
+import {theme} from '~/assets/config/theme'
+import {NConfigProvider} from "naive-ui";
+const themeOverrides = theme
 </script>
 
 <template>
-  <n-loading-bar-provider>
-    <NuxtLayout>
+    <n-loading-bar-provider>
+      <NuxtLayout>
 
-    </NuxtLayout>
-  </n-loading-bar-provider>
+      </NuxtLayout>
+    </n-loading-bar-provider>
 </template>
 
 <style scoped>
+:deep(.n-loading-bar) {
 
+}
 </style>

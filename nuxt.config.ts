@@ -5,7 +5,7 @@ import {NaiveUiResolver} from 'unplugin-vue-components/resolvers';
 export default defineNuxtConfig({
   app:{
     head: {
-      title: '致飞网盘 1.0'
+      title: '致飞网盘-Admin 1.0 '
     }
   },
   css:[
