@@ -3,7 +3,12 @@ import {NIcon} from "naive-ui";
 import NuxtLink from "#app/components/nuxt-link.js";
 
 export async function asyncRenderIcon(icon) {
-    const {[icon]: iconComp} = await import("@vicons/fluent");
+    const {[icon]: iconComp} = await import("@vicons/antd");
+    return () => h(NIcon, null, {default: () => h(iconComp)});
+}
+
+export function RenderIcon(icon) {
+    const {[icon]: iconComp} = import("@vicons/antd");
     return () => h(NIcon, null, {default: () => h(iconComp)});
 }
 
@@ -16,7 +21,7 @@ export const gen_router_paths = async (arr) => {
             if (element.icon != null) {
                 // element.menuName
                 result.push({
-                    label: element.menuRouterPath != '' ? element.outline ? () => h(
+                    label: element.menuType == 'ITEM' ? element.outline ? () => h(
                         'a', {
                             href: element.menuRouterPath,
                             target: '_blank'
@@ -31,7 +36,7 @@ export const gen_router_paths = async (arr) => {
                 })
             } else {
                 result.push({
-                    label: element.menuRouterPath != '' ? element.outline ? () => h(
+                    label: element.menuType == 'ITEM' ? element.outline ? () => h(
                         'a', {
                             href: element.menuRouterPath,
                             target: '_blank'
