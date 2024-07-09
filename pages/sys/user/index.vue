@@ -52,11 +52,6 @@ const columns = [
 ]
 const checkedRowKeys = ref()
 const loading = ref(false)
-const page_params = reactive({
-  total: 0,
-  current_page: 1,
-  page_size: 10
-})
 const pagination = reactive({
   page: 1, //受控模式下的当前页
   pageSize: 10, //受控模式下的分页大小,每一页的数据大小
@@ -70,12 +65,10 @@ const pagination = reactive({
   },
   onChange: page => { //切换第几页时
     pagination.page = page;
-    page_params.current_page = page
     init();
   },
   onPageSizeChange: pageSize => {
     pagination.pageSize = pageSize;
-    page_params.page_size = pageSize;
     pagination.page = 1;
     init();
   },
@@ -96,13 +89,14 @@ const hand_edit = (row)=>{
 
 const init = ()=>{
   loading.value = true
-  apis.load_all_users(page_params).then(res=>{
+  apis.load_all_users({
+    current_page: pagination.page,
+    page_size: pagination.pageSize
+  }).then(res=>{
     tb_date.value = res.data.data.data
-    page_params.total = res.data.data.total
     pagination.itemCount = res.data.data.total
     loading.value = false
-    if(tb_date.value.length == 0 && page_params.current_page != 1){
-      page_params.current_page--;
+    if(tb_date.value.length == 0 && pagination.page != 1){
       pagination.page--;
       init()
     }
@@ -122,7 +116,7 @@ onMounted(()=>{
       <template #header>
         <n-skeleton v-if="loading" text width="60%" />
         <template v-else>
-          操作
+          操作 - <n-tag type="info">用户管理</n-tag>
         </template>
       </template>
       <n-skeleton v-if="loading" text :repeat="6" />

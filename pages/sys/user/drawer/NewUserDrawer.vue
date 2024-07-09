@@ -25,7 +25,6 @@ const drawer = reactive({
   },
   rules: {},
   submit: ()=>{
-    console.log(drawer.data)
     apis.new_user(drawer.data).then(res=>{
       drawer.close()
       emits('success')

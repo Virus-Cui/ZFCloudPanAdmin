@@ -7,10 +7,7 @@ const isMoved = ref(useOsTheme().value != 'dark')
 const emits = defineEmits(['change'])
 
 onMounted(() => {
-  console.log('theme',useOsTheme().value != 'dark')
   let mainButton = $(".main-button"); //获取按钮主体
-  console.log(mainButton)
-  console.log('button', mainButton)
   let daytimeBackgrond = $(".daytime-backgrond"); //获取按钮背后的虚影
   let cloud = $(".cloud"); //获取云层
   let cloudLight = $(".cloud-light"); //获取云层虚影

@@ -9,6 +9,8 @@ import LogoSmall from "~/components/logo-small.vue";
 import {gen_router_paths} from "assets/utils/utils.js";
 import NuxtLink from "#app/components/nuxt-link.js";
 import {theme} from '~/assets/config/theme'
+import * as apis from '../pages/sys/menu/apis'
+
 const loading = ref(true)
 const router = useRouter();
 const path = ref()
@@ -34,7 +36,6 @@ const renderIcon = (icon) => {
 }
 
 watch(()=>router.currentRoute.value, ()=>{
-  console.log(router.currentRoute.value.fullPath)
   setTimeout(()=>{
     path.value = router.currentRoute.value.fullPath
   }, 100)
@@ -54,13 +55,10 @@ let interval = ref()
 onMounted(async () => {
   loading.value = true
   if (process.client) {
-    console.log('lvar',loadingBar)
     loadingBar.start()
     path.value = router.currentRoute.value.fullPath
-    console.log('path', path.value)
   }
-  console.log()
-  await axios.get('http://127.0.0.1:8080/auth/menus').then(res => {
+  await apis.load_menus().then(res => {
     arr.value = res.data.data
   })
   let genRouterPaths = await gen_router_paths(arr.value);
@@ -81,11 +79,17 @@ onMounted(async () => {
 
 const changeTheme = (mode) => {
   clearInterval(interval.value)
-  console.log(mode.mode)
   if (mode.mode) {
     dark.value = darkTheme
   } else {
     dark.value = undefined
+  }
+}
+
+const change = (e)=>{
+  if(process.client){
+    console.log(path.value)
+    localStorage.setItem('path', e.target.innerText)
   }
 }
 </script>
@@ -113,6 +117,7 @@ const changeTheme = (mode) => {
                 :collapsed-width="64"
                 :collapsed-icon-size="22"
                 :options="menuOptions"
+                @click="change"
             />
           </n-layout-sider>
           <n-layout>
