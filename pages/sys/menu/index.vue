@@ -121,27 +121,29 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-card id="active">
-    <template #header>
-      操作 -
-      <n-tag type="info">菜单管理</n-tag>
-    </template>
-    <n-button type="primary" @click="dialog.dialog.show()">创建菜单</n-button>
-  </n-card>
-  <n-card style="margin-top: 1rem;">
-    <template #header>
-      查询结果
-    </template>
-    <n-data-table
-        :style="{ height: `${height}` }"
-        flex-height
-        :columns="columns"
-        :data="data"
-        :row-key="rowKey"
-        children-key="treeMenus"
-    />
-  </n-card>
-  <NewMenuDialog @success="init()" ref="dialog"/>
+  <div>
+    <n-card id="active">
+      <template #header>
+        操作 -
+        <n-tag type="info">菜单管理</n-tag>
+      </template>
+      <n-button type="primary" @click="dialog.dialog.show()">创建菜单</n-button>
+    </n-card>
+    <n-card style="margin-top: 1rem;">
+      <template #header>
+        查询结果
+      </template>
+      <n-data-table
+          :style="{ height: `${height}` }"
+          flex-height
+          :columns="columns"
+          :data="data"
+          :row-key="rowKey"
+          children-key="treeMenus"
+      />
+    </n-card>
+    <NewMenuDialog @success="init()" ref="dialog"/>
+  </div>
 </template>
 
 <style scoped>

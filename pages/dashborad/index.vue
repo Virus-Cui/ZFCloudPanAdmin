@@ -4,7 +4,9 @@ import {ref, reactive, onMounted} from "vue";
 </script>
 
 <template>
-dashborad
+  <div>
+    dashborad
+  </div>
 </template>
 
 <style scoped>
