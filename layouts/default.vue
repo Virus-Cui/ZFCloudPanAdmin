@@ -1,6 +1,6 @@
 <script setup>
 import {h, ref, onMounted, watch} from "vue";
-import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar} from "naive-ui";
+import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage} from "naive-ui";
 import swBtn from '@/components/switch.vue'
 import text from '~/components/logo-text.vue'
 import axios from 'axios'
@@ -53,6 +53,9 @@ const menuOptions = ref([])
 const collapsed = ref(false)
 let interval = ref()
 onMounted(async () => {
+  if(process.client){
+    window.$message = useMessage()
+  }
   loading.value = true
   if (process.client) {
     loadingBar.start()

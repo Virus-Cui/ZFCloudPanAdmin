@@ -15,3 +15,19 @@ export const add_menu = (data) => {
         })
     })
 }
+
+export const change_menu = (data) =>{
+    return new Promise(r=>{
+        service.put(`/menu/menu`, data).then(res=>{
+            r(res)
+        })
+    })
+}
+
+export const del_menu = (id)=>{
+    return new Promise(r=>{
+        service.delete(`/menu/menu/${id}`).then(res=>{
+            r(res)
+        })
+    })
+}

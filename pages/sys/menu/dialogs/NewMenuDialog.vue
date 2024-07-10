@@ -82,6 +82,7 @@ const dialog = reactive({
   title: '添加菜单',
   open: false,
   data: {
+    id: 0,
     menuName: '',
     menuPurview: '',
     menuRouterPath: '',
@@ -91,7 +92,11 @@ const dialog = reactive({
     outline: '',
     menuType: ''
   },
-  show: ()=>{
+  show: (data)=>{
+    if(data != null){
+      Object.assign(dialog.data, data)
+      dialog.title = '修改菜单'
+    }
     dialog.open = true
     menu_apis.load_menus().then(res => {
       menu.value = res.data.data
@@ -106,6 +111,7 @@ const dialog = reactive({
   },
   close: ()=>{
     Object.assign(dialog.data, {
+      id: 0,
       menuName: '',
       menuPurview: '',
       menuRouterPath: '',
@@ -120,9 +126,16 @@ const dialog = reactive({
   rules: {},
   submit: ()=>{
     console.log(dialog.data)
-    menu_apis.add_menu(dialog.data).then(res=>{
-      emits('success')
-    })
+
+    if(dialog.title == '修改菜单'){
+      menu_apis.change_menu(dialog.data).then(res=>{
+        emits('success')
+      })
+    }else {
+      menu_apis.add_menu(dialog.data).then(res=>{
+        emits('success')
+      })
+    }
   }
 })
 

@@ -4,6 +4,7 @@ import NewMenuDialog from "~/pages/sys/menu/dialogs/NewMenuDialog.vue";
 import * as menu_apis from './apis'
 import {NButton, NIcon} from "naive-ui";
 import * as icon from '~/assets/utils/icons'
+import * as msg from '~/assets/utils/message'
 function renderIcon (icon: Component) {
   return h(NIcon, {
     size: '1.4rem'
@@ -84,10 +85,17 @@ const columns = [
 ];
 
 const hand_edit = (row) => {
-
+  dialog.value.dialog.show(row)
 }
 
 const hand_del = (row) => {
+  if(row.treeMenus.length == 0){
+    menu_apis.del_menu(row.id).then(res=>{
+      init()
+    })
+  }else {
+    msg.warn('该项目下不能含有子元素')
+  }
 
 }
 const data = ref([])
