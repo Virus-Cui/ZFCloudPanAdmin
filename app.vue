@@ -1,22 +1,29 @@
 <script setup>
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {theme} from '~/assets/config/theme'
 import {NConfigProvider, useMessage} from "naive-ui";
+import FullLoading from '~/components/FullLoading.vue'
 const themeOverrides = theme
 
-
+const isFullLoading = ref(true)
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
-    <n-message-provider>
-      <n-loading-bar-provider>
-        <NuxtLayout>
+  <div>
+<!--    <FullLoading v-if="isFullLoading" />-->
+    <n-config-provider :theme-overrides="themeOverrides">
+      <n-dialog-provider>
+        <n-message-provider>
+          <n-loading-bar-provider>
+            <NuxtLayout>
 
-        </NuxtLayout>
-      </n-loading-bar-provider>
-    </n-message-provider>
-  </n-config-provider>
+            </NuxtLayout>
+          </n-loading-bar-provider>
+        </n-message-provider>
+      </n-dialog-provider>
+    </n-config-provider>
+  </div>
+
 </template>
 
 <style scoped>

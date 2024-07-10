@@ -1,6 +1,6 @@
 <script setup>
 import {h, ref, onMounted, watch} from "vue";
-import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage} from "naive-ui";
+import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage, useDialog } from "naive-ui";
 import swBtn from '@/components/switch.vue'
 import text from '~/components/logo-text.vue'
 import axios from 'axios'
@@ -10,6 +10,8 @@ import {gen_router_paths} from "assets/utils/utils.js";
 import NuxtLink from "#app/components/nuxt-link.js";
 import {theme} from '~/assets/config/theme'
 import * as apis from '../pages/sys/menu/apis'
+import {renderIcon} from "assets/utils/icons.js";
+
 
 const loading = ref(true)
 const router = useRouter();
@@ -31,16 +33,6 @@ router.afterEach((to,from,next)=>{
 
 const themeOverrides = theme
 const dark = ref()
-const renderIcon = (icon) => {
-  return () => h(NIcon, null, {default: () => h(icon)})
-}
-
-watch(()=>router.currentRoute.value, ()=>{
-  setTimeout(()=>{
-    path.value = router.currentRoute.value.fullPath
-  }, 100)
-})
-
 const header = {
   label:
       () => h(NuxtLink, {
@@ -52,10 +44,18 @@ const menuOptions = ref([])
 
 const collapsed = ref(false)
 let interval = ref()
+
+
+watch(()=>router.currentRoute.value, ()=>{
+  setTimeout(()=>{
+    path.value = router.currentRoute.value.fullPath
+  }, 100)
+})
+
+
+
 onMounted(async () => {
-  if(process.client){
-    window.$message = useMessage()
-  }
+  $mount()
   loading.value = true
   if (process.client) {
     loadingBar.start()
@@ -79,6 +79,14 @@ onMounted(async () => {
     loadingBar.finish()
   }
 })
+
+const $mount = ()=>{
+  if(process.client){
+    window.$message = useMessage()
+    window.$dialog = useDialog()
+
+  }
+}
 
 const changeTheme = (mode) => {
   clearInterval(interval.value)

@@ -1,57 +1,72 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted, h} from "vue";
+import {renderIcon} from "assets/utils/icons.js";
+import {Loading3QuartersOutlined} from '@vicons/antd'
+import {NButton, NTag} from "naive-ui";
 import * as apis from './apis'
-import {NButton} from 'naive-ui'
-import NewUserDialog from "~/pages/sys/user/dialog/NewUserDialog.vue";
 
-const tb_date = ref([])
+const height = ref()
+const tb_data = ref([])
+const loading = ref(false)
+const checkedRowKeys = ref()
 const columns = [
   {
     title: 'ID',
-    key: 'id',
-  },
-  {
-    title: '用户名',
-    key: 'userName'
-  },
-  {
-    title: '邮箱',
-    key: 'email'
+    key: 'id'
   },
   {
     title: '创建时间',
     key: 'createTime'
   },
   {
-    title: '操作',
-    key: 'actions',
+    title: '请求路径',
+    key: 'path'
+  },
+  {
+    title: '请求人',
+    key: 'accessAs'
+  },
+  {
+    title: '请求地址',
+    key: 'accessFrom'
+  },
+  {
+    title: '请求类型',
+    key: 'method',
     render(row) {
-      return [
-        h(
-            NButton,
-            {
-              size: "small",
-              type: "primary",
-              onClick: () => hand_edit(row)
-            },
-            {default: () => '编辑'}
-        ),
-        h(
-            NButton,
-            {
-              size: "small",
-              type: "error",
-              onClick: () => hand_del(row),
-              style: "margin-left: 1rem"
-            },
-            {default: () => '删除'}
-        )
-      ]
+      switch (row.method) {
+        case 'GET':
+          return h(NTag, {
+            type: 'success'
+          }, row.method)
+        case 'POST':
+          return h(NTag, {
+            type: 'warning'
+          }, row.method)
+        case 'DELETE':
+          return h(NTag, {
+            type: 'error'
+          }, row.method)
+        case 'PUT':
+          return h(NTag, {
+            type: 'info'
+          }, row.method)
+      }
+      return h(NTag, {}, row.method)
+    }
+  },
+  {
+    title: '操作',
+    key: 'active',
+    render() {
+      return h(NButton, {
+        type: 'primary',
+        size: 'small'
+      }, '详情')
     }
   }
 ]
-const checkedRowKeys = ref()
-const loading = ref(false)
+
 const pagination = reactive({
   page: 1, //受控模式下的当前页
   pageSize: 10, //受控模式下的分页大小,每一页的数据大小
@@ -73,58 +88,41 @@ const pagination = reactive({
     init();
   },
 });
-const drawer = ref()
 
-const hand_del = (row) => {
-  apis.delete_user(row.id).then(res => {
-    init()
-  })
-}
-
-const hand_edit = (row) => {
-  drawer.value.dialog.show(row)
-}
-const height = ref()
 const init = () => {
   loading.value = true
-  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
-  apis.load_all_users({
+  // 初始化高度
+  // if(process.client){
+    height.value =`calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
+  // }
+  console.log(height.value);
+  apis.load_all_logs({
     current_page: pagination.page,
     page_size: pagination.pageSize
   }).then(res => {
-    tb_date.value = res.data.data.data
+    tb_data.value = res.data.data.data
     pagination.itemCount = res.data.data.total
     loading.value = false
-    if (tb_date.value.length == 0 && pagination.page != 1) {
-      pagination.page--;
-      init()
-    }
   })
 }
-
 
 onMounted(() => {
   init()
 })
-
 </script>
 
 <template>
-  <div style="width: 100%;height: 100%;">
-    <n-card>
+  <div>
+    <n-card id="action">
       <template #header>
-        操作 -
-        <n-tag type="info">用户管理</n-tag>
+        操作
       </template>
-      <div>
-        <n-button type="primary" @click="drawer.dialog.show()">
-          添加用户
-        </n-button>
-      </div>
+      <n-button :render-icon="renderIcon(Loading3QuartersOutlined)" @click="init()">刷新</n-button>
     </n-card>
+
     <n-card style="margin-top: 1rem;">
       <template #header>
-        查询结果
+          查询结果
       </template>
       <div>
         <n-data-table
@@ -136,16 +134,14 @@ onMounted(() => {
             :columns="columns"
             :pagination="pagination"
             :bordered="false"
-            :data="tb_date"
+            :data="tb_data"
             :row-key="row => row.name"
             remote
             v-model:checked-row-keys="checkedRowKeys"
-            max-height="100%"
         >
         </n-data-table>
       </div>
     </n-card>
-    <NewUserDialog @success="init()" ref="drawer"/>
   </div>
 </template>
 

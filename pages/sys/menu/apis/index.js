@@ -1,8 +1,9 @@
 import {service} from 'assets/utils/request.js'
+import * as msg from 'assets/utils/message'
 
 export const load_menus = () => {
     return new Promise(r => {
-        service.get('/menu/menu').then(res => {
+        service.get('/menu').then(res => {
             r(res)
         })
     })
@@ -10,7 +11,7 @@ export const load_menus = () => {
 
 export const add_menu = (data) => {
     return new Promise(r => {
-        service.post('/menu/menu', data).then(res => {
+        service.post('/menu', data).then(res => {
             r(res)
         })
     })
@@ -18,7 +19,7 @@ export const add_menu = (data) => {
 
 export const change_menu = (data) =>{
     return new Promise(r=>{
-        service.put(`/menu/menu`, data).then(res=>{
+        service.put(`/menu`, data).then(res=>{
             r(res)
         })
     })
@@ -26,8 +27,12 @@ export const change_menu = (data) =>{
 
 export const del_menu = (id)=>{
     return new Promise(r=>{
-        service.delete(`/menu/menu/${id}`).then(res=>{
-            r(res)
+        msg.warn_dialog('警告', '确定要删除吗').then(()=>{
+            service.delete(`/menu/${id}`).then(res=>{
+                msg.success('删除成功')
+                r(res)
+                location.reload()
+            })
         })
     })
 }

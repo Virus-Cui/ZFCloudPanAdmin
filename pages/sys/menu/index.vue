@@ -5,10 +5,11 @@ import * as menu_apis from './apis'
 import {NButton, NIcon} from "naive-ui";
 import * as icon from '~/assets/utils/icons'
 import * as msg from '~/assets/utils/message'
-function renderIcon (icon: Component) {
+
+function renderIcon(icon: Component) {
   return h(NIcon, {
     size: '1.4rem'
-  }, { default: () => h(icon) })
+  }, {default: () => h(icon)})
 }
 
 const dialog = ref()
@@ -32,10 +33,10 @@ const columns = [
     key: "icon",
     width: '120px',
     align: 'center',
-    render(row, id){
+    render(row, id) {
       for (let i = 0; i < icon.icon_mapping.length; i++) {
         let ele = icon.icon_mapping[i]
-        if(ele.label == row.icon){
+        if (ele.label == row.icon) {
           return renderIcon(ele.value)
         }
       }
@@ -54,11 +55,13 @@ const columns = [
   },
   {
     title: "菜单备注",
-    key: "menuComment"
+    key: "menuComment",
+    minWidth: '200px'
   },
   {
     title: "操作",
-    render (row){
+    minWidth: '200px',
+    render(row) {
       return [
         h(
             NButton,
@@ -89,11 +92,11 @@ const hand_edit = (row) => {
 }
 
 const hand_del = (row) => {
-  if(row.treeMenus.length == 0){
-    menu_apis.del_menu(row.id).then(res=>{
+  if (row.treeMenus.length == 0) {
+    menu_apis.del_menu(row.id).then(res => {
       init()
     })
-  }else {
+  } else {
     msg.warn('该项目下不能含有子元素')
   }
 
@@ -103,7 +106,10 @@ const rowKey = (row) => {
   return row.id;
 }
 
-const init = ()=>{
+const height = ref()
+const init = () => {
+  // 初始化高度
+  height.value =`calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
   menu_apis.load_menus().then(res => {
     data.value = res.data.data
   })
@@ -115,28 +121,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <ClientOnly>
-    <div>
-      <n-card>
-        <template #header>
-          操作 - <n-tag type="info">菜单管理</n-tag>
-        </template>
-        <n-button type="primary" @click="dialog.dialog.show()">创建菜单</n-button>
-      </n-card>
-      <n-card style="margin-top: 1rem;">
-        <template #header>
-          查询结果
-        </template>
-        <n-data-table
-            :columns="columns"
-            :data="data"
-            :row-key="rowKey"
-            children-key="treeMenus"
-        />
-      </n-card>
-      <NewMenuDialog @success="init()" ref="dialog"/>
-    </div>
-  </ClientOnly>
+  <n-card id="active">
+    <template #header>
+      操作 -
+      <n-tag type="info">菜单管理</n-tag>
+    </template>
+    <n-button type="primary" @click="dialog.dialog.show()">创建菜单</n-button>
+  </n-card>
+  <n-card style="margin-top: 1rem;">
+    <template #header>
+      查询结果
+    </template>
+    <n-data-table
+        :style="{ height: `${height}` }"
+        flex-height
+        :columns="columns"
+        :data="data"
+        :row-key="rowKey"
+        children-key="treeMenus"
+    />
+  </n-card>
+  <NewMenuDialog @success="init()" ref="dialog"/>
 </template>
 
 <style scoped>

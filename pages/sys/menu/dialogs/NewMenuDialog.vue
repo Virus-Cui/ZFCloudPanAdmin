@@ -125,14 +125,16 @@ const dialog = reactive({
   },
   rules: {},
   submit: ()=>{
-    console.log(dialog.data)
-
     if(dialog.title == '修改菜单'){
       menu_apis.change_menu(dialog.data).then(res=>{
+        dialog.close()
+        location.reload()
         emits('success')
       })
     }else {
       menu_apis.add_menu(dialog.data).then(res=>{
+        dialog.close()
+        location.reload()
         emits('success')
       })
     }
