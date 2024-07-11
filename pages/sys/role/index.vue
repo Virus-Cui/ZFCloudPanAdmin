@@ -4,7 +4,9 @@ import {ref, reactive, onMounted} from "vue";
 </script>
 
 <template>
-角色管理
+  <div>
+    角色管理
+  </div>
 </template>
 
 <style scoped>
