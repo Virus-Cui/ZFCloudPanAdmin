@@ -23,13 +23,14 @@ const columns = [
   },
   {
     title: '操作',
-    render(){
+    render(row){
       return h('div',null, [
           h(NButton, {
             type: 'warning',
             size: 'small',
             onClick: ()=>{
-
+              console.log(row);
+              roleDialog.value.dialog.show(row)
             }
           }, '编辑'),
           h(NButton, {
@@ -37,7 +38,9 @@ const columns = [
             size: 'small',
             style: "margin-left: 1rem",
             onClick: ()=>{
-
+              apis.remove_role(row.id).then(res=>{
+                init()
+              })
             }
           }, '删除')
       ])
@@ -76,7 +79,7 @@ const init = ()=>{
   }).then(res=>{
     tb_data.value = res.data.data.data
     pagination.itemCount = res.data.data.total
-    if(tb_data.value.length == 0){
+    if(tb_data.value.length == 0 && pagination.page != 1){
       pagination.page--;
       init()
     }
@@ -117,7 +120,7 @@ onMounted(()=>{
       >
       </n-data-table>
     </n-card>
-    <RoleDialog ref="roleDialog" />
+    <RoleDialog @success="init()" ref="roleDialog" />
   </div>
 </template>
 

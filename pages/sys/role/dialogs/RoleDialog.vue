@@ -6,20 +6,36 @@ import * as icons from '~/assets/utils/icons'
 import {ArrowRightOutlined} from '@vicons/antd'
 import {NIcon} from "naive-ui";
 
+const emits = defineEmits(['success'])
+const tree = ref()
 const menus = ref()
 const dialog = reactive({
   title: '创建角色',
   open: false,
   data: {
+    id: null,
     roleName: '',
-    menuIds: []
+    menuIds_list: [],
+    authIds_list: [],
+    menuIds: '',
+    authIds: '',
   },
   show: (data) => {
+    Object.assign(dialog.data, {
+      id: null,
+      roleName: '',
+      menuIds_list: [],
+      authIds_list: [],
+      menuIds: '',
+      authIds: '',
+    })
     load_menus().then(res => {
       menus.value = res.data.data
     })
     if (data != null) {
       Object.assign(dialog.data, data)
+      dialog.data.authIds_list = JSON.parse(dialog.data.authIds)
+      dialog.data.menuIds_list = JSON.parse(dialog.data.menuIds)
       dialog.title = '修改角色'
     } else {
       dialog.title = '创建角色'
@@ -27,15 +43,37 @@ const dialog = reactive({
     dialog.open = true
   },
   close: () => {
-    Object.assign(dialog.data, {})
+    Object.assign(dialog.data, {
+      id: null,
+      roleName: '',
+      menuIds_list: [],
+      authIds_list: [],
+      menuIds: '',
+      authIds: '',
+    })
     dialog.open = false
   },
   rules: {},
   submit: (type) => {
-    switch (type){
+    dialog.data.menuIds_list = tree.value.getCheckedData().keys
+    for (let i = 0; i < tree.value.getIndeterminateData().keys.length; i++) {
+      let ele = tree.value.getIndeterminateData().keys[i];
+      dialog.data.menuIds_list.push(ele)
+    }
+    dialog.data.menuIds = JSON.stringify(dialog.data.menuIds_list)
+    dialog.data.authIds = JSON.stringify(dialog.data.authIds_list)
+    switch (type) {
       case 1:
-        // apis.new_role(dialog.data);
-        console.log(dialog.data)
+        apis.new_role(dialog.data).then(res => {
+          emits('success')
+          dialog.close()
+        })
+        break
+      case 2:
+        apis.change_role(dialog.data).then(res => {
+          emits('success')
+          dialog.close()
+        })
         break
     }
   }
@@ -67,18 +105,23 @@ const render = (opt) => {
         </n-form-item>
         <n-form-item label="权限列表">
           <n-tree-select
-              v-model:value="dialog.data.menuIds"
+              ref="tree"
+              v-model:value="dialog.data.authIds_list"
               cascade
+              placeholder="请选择菜单或者按钮"
               checkable
               :options="menus" children-field="treeMenus" key-field="id" label-field="menuName"
-                         :render-switcher-icon="render" multiple></n-tree-select>
+              :render-switcher-icon="render" multiple></n-tree-select>
         </n-form-item>
 
       </n-form>
       <template #footer>
         <div style="display: flex;justify-content: right">
           <n-button @click="dialog.close()">取消</n-button>
-          <n-button style="margin-left: 1rem" type="primary" @click="dialog.submit(1)">提交</n-button>
+          <n-button v-if="dialog.title == '创建角色'" style="margin-left: 1rem" type="primary"
+                    @click="dialog.submit(1)">提交
+          </n-button>
+          <n-button v-else style="margin-left: 1rem" type="primary" @click="dialog.submit(2)">提交</n-button>
         </div>
       </template>
     </n-card>
