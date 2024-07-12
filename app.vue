@@ -29,11 +29,14 @@ const isFullLoading = ref(true)
 .page-enter-active,
 .page-leave-active {
   opacity: 1;
+  transform: translate(0);
   transition: all .4s;
 }
 .page-enter-from,
 .page-leave-to {
+  filter: blur(8px);
+  transform: translate(10px);
   opacity: 0;
-  filter: blur(.6rem);
+  //filter: blur(.6rem);
 }
 </style>

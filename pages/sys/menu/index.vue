@@ -6,6 +6,9 @@ import {NButton, NIcon} from "naive-ui";
 import * as icon from '~/assets/utils/icons'
 import * as msg from '~/assets/utils/message'
 
+import * as icons from '~/assets/utils/icons'
+import {PlusOutlined} from "@vicons/antd";
+
 function renderIcon(icon: Component) {
   return h(NIcon, {
     size: '1.4rem'
@@ -127,7 +130,7 @@ onMounted(() => {
         操作 -
         <n-tag type="info">菜单管理</n-tag>
       </template>
-      <n-button type="primary" @click="dialog.dialog.show()">创建菜单</n-button>
+      <n-button type="primary" @click="dialog.dialog.show()" :render-icon="icons.renderIcon(PlusOutlined)">创建菜单</n-button>
     </n-card>
     <n-card style="margin-top: 1rem;">
       <template #header>

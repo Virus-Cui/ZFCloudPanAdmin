@@ -3,6 +3,8 @@ import {ref, reactive, onMounted, h} from "vue";
 import * as apis from './apis'
 import {NButton} from 'naive-ui'
 import NewUserDialog from "~/pages/sys/user/dialog/NewUserDialog.vue";
+import * as icons from "assets/utils/icons";
+import {PlusOutlined} from "@vicons/antd";
 
 const tb_date = ref([])
 const columns = [
@@ -80,7 +82,6 @@ const hand_del = (row) => {
     init()
   })
 }
-
 const hand_edit = (row) => {
   drawer.value.dialog.show(row)
 }
@@ -101,12 +102,9 @@ const init = () => {
     }
   })
 }
-
-
 onMounted(() => {
   init()
 })
-
 </script>
 
 <template>
@@ -114,10 +112,10 @@ onMounted(() => {
     <n-card>
       <template #header>
         操作 -
-        <n-tag type="info">用户管理</n-tag>
+        <n-tag type="info" >用户管理</n-tag>
       </template>
       <div>
-        <n-button type="primary" @click="drawer.dialog.show()">
+        <n-button type="primary" :render-icon="icons.renderIcon(PlusOutlined)" @click="drawer.dialog.show()">
           添加用户
         </n-button>
       </div>

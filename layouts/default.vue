@@ -1,6 +1,6 @@
 <script setup>
 import {h, ref, onMounted, watch} from "vue";
-import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage, useDialog } from "naive-ui";
+import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage, useDialog} from "naive-ui";
 import swBtn from '@/components/switch.vue'
 import text from '~/components/logo-text.vue'
 import axios from 'axios'
@@ -19,13 +19,13 @@ const path = ref()
 const arr = ref([]);
 const loadingBar = useLoadingBar();
 // 设置前置路由守卫
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to, from, next) => {
   // 路由中导入-开始
   loadingBar.start()
   next()
 })
 // 设置后置路由守卫
-router.afterEach((to,from,next)=>{
+router.afterEach((to, from, next) => {
   // 路由中导入-结束
   loadingBar.finish()
 })
@@ -46,12 +46,11 @@ const collapsed = ref(false)
 let interval = ref()
 
 
-watch(()=>router.currentRoute.value, ()=>{
-  setTimeout(()=>{
+watch(() => router.currentRoute.value, () => {
+  setTimeout(() => {
     path.value = router.currentRoute.value.fullPath
   }, 100)
 })
-
 
 
 onMounted(async () => {
@@ -80,8 +79,8 @@ onMounted(async () => {
   }
 })
 
-const $mount = ()=>{
-  if(process.client){
+const $mount = () => {
+  if (process.client) {
     window.$message = useMessage()
     window.$dialog = useDialog()
 
@@ -97,8 +96,8 @@ const changeTheme = (mode) => {
   }
 }
 
-const change = (e)=>{
-  if(process.client){
+const change = (e) => {
+  if (process.client) {
     console.log(path.value)
     localStorage.setItem('path', e.target.innerText)
   }
@@ -107,20 +106,21 @@ const change = (e)=>{
 
 <template>
   <ClientOnly>
-      <n-config-provider :theme="dark" :theme-overrides="themeOverrides">
-        <n-layout has-sider>
-          <n-layout-sider
-              bordered
-              collapse-mode="width"
-              :collapsed-width="64"
-              width="240px"
-              style="height: 100vh"
-              :collapsed="collapsed"
-              show-trigger
-              @collapse="collapsed = true"
-              @expand="collapsed = false"
-          >
-            <n-skeleton v-if="loading" :width="'100%'" :height="'100%'"  size="medium" />
+    <n-config-provider :theme="dark" :theme-overrides="themeOverrides">
+      <n-layout has-sider>
+        <n-layout-sider
+            bordered
+            collapse-mode="width"
+            :collapsed-width="64"
+            width="240px"
+            style="height: 100vh"
+            :collapsed="collapsed"
+            show-trigger="bar"
+            @collapse="collapsed = true"
+            @expand="collapsed = false"
+        >
+          <div style="display: flex;height: 100vh; width: 100%;  justify-content: space-between;flex-direction: column">
+            <n-skeleton v-if="loading" :width="'100%'" :height="'100%'" size="medium"/>
             <n-menu
                 v-else
                 v-model:value="path"
@@ -130,26 +130,41 @@ const change = (e)=>{
                 :options="menuOptions"
                 @click="change"
             />
-          </n-layout-sider>
-          <n-layout>
-            <n-layout-header bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem">
-              <div style="display: flex;justify-content: space-between;align-items: center;width: 100%">
-                <div>123</div>
+            <div
+                :style="{'position': 'relative', 'z-index': '999', 'height': '3rem'}" class="admin">
+              <div v-if="!collapsed" style="display: flex;justify-content: left;align-items: center;width: 100%">
+                <div style="margin: 0 1rem">
+                  <n-avatar src="https://q1.qlogo.cn/g?b=qq&nk=2437916756&s=640"></n-avatar>
+                </div>
                 <div>
-                  <swBtn @change="changeTheme"></swBtn>
+                  Admin
                 </div>
               </div>
-            </n-layout-header>
-            <n-layout-content bordered
-                              style="height: calc(100vh - 6rem);display: flex;align-items: center;padding: 1rem 1rem;width: 100%;">
-              <NuxtPage/>
-            </n-layout-content>
-            <n-layout-footer bordered style="height: 3rem;display: flex;align-items: center;padding: 0 0 0 1rem">Powered
-              By Virus_Cui
-            </n-layout-footer>
-          </n-layout>
+              <div v-else style="margin-left: 1rem">
+                <n-avatar src="https://q1.qlogo.cn/g?b=qq&nk=2437916756&s=640"></n-avatar>
+              </div>
+            </div>
+          </div>
+        </n-layout-sider>
+        <n-layout>
+          <n-layout-header bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem">
+            <div style="display: flex;justify-content: space-between;align-items: center;width: 100%">
+              <div>123</div>
+              <div>
+                <swBtn @change="changeTheme"></swBtn>
+              </div>
+            </div>
+          </n-layout-header>
+          <n-layout-content bordered
+                            style="height: calc(100vh - 6rem);display: flex;align-items: center;padding: 1rem 1rem;width: 100%;">
+            <NuxtPage/>
+          </n-layout-content>
+          <n-layout-footer bordered style="height: 3rem;display: flex;align-items: center;padding: 0 0 0 1rem">Powered
+            By Virus_Cui
+          </n-layout-footer>
         </n-layout>
-      </n-config-provider>
+      </n-layout>
+    </n-config-provider>
   </ClientOnly>
 </template>
 
@@ -158,7 +173,18 @@ const change = (e)=>{
   background: none;
 }
 
-:deep(.n-layout-scroll-container){
+:deep(.n-layout-scroll-container) {
   width: 100%;
+}
+
+:deep(.n-layout-toggle-bar){
+  right: -24px;
+}
+
+.admin{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  overflow: hidden;
 }
 </style>

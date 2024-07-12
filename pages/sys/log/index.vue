@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted, h} from "vue";
 import {renderIcon} from "assets/utils/icons.js";
-import {Loading3QuartersOutlined} from '@vicons/antd'
+import {Loading3QuartersOutlined, CloseOutlined, PlusOutlined} from '@vicons/antd'
 import {NButton, NTag} from "naive-ui";
 import * as apis from './apis'
+import LogInfoDescription from "~/pages/sys/log/components/LogInfoDescription.vue";
 
 const height = ref()
 const tb_data = ref([])
 const loading = ref(false)
 const checkedRowKeys = ref()
 const columns = [
+  {
+    type: 'expand',
+    key: 'id',
+    renderExpand: (rowData) => {
+      return h(LogInfoDescription, {
+        info: rowData
+      }, null)
+    }
+  },
   {
     title: 'ID',
     key: 'id'
@@ -54,16 +64,6 @@ const columns = [
       }
       return h(NTag, {}, row.method)
     }
-  },
-  {
-    title: '操作',
-    key: 'active',
-    render() {
-      return h(NButton, {
-        type: 'primary',
-        size: 'small'
-      }, '详情')
-    }
   }
 ]
 
@@ -93,7 +93,7 @@ const init = () => {
   loading.value = true
   // 初始化高度
   // if(process.client){
-    height.value =`calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
+  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
   // }
   console.log(height.value);
   apis.load_all_logs({
@@ -118,11 +118,14 @@ onMounted(() => {
         操作
       </template>
       <n-button :render-icon="renderIcon(Loading3QuartersOutlined)" @click="init()">刷新</n-button>
+      <n-button style="margin-left: 1rem" :render-icon="renderIcon(CloseOutlined)" type="error" @click="init()">
+        清空日志
+      </n-button>
     </n-card>
 
     <n-card style="margin-top: 1rem;">
       <template #header>
-          查询结果
+        查询结果
       </template>
       <div>
         <n-data-table
@@ -135,7 +138,7 @@ onMounted(() => {
             :pagination="pagination"
             :bordered="false"
             :data="tb_data"
-            :row-key="row => row.name"
+            :row-key="row => row.id"
             remote
             v-model:checked-row-keys="checkedRowKeys"
         >
