@@ -10,6 +10,11 @@ import {useHead} from "unhead";
 useHead({
   title: '致飞网盘-Admin｜角色管理',
 })
+
+definePageMeta({
+  name: '角色管理',
+  parent: '系统管理'
+});
 const height = ref()
 const loading = ref()
 const roleDialog = ref()

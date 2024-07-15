@@ -22,8 +22,10 @@ service.interceptors.response.use(
         }else if(res.data?.code === 3){
             msg.warn('权限不足')
             navigateTo('/')
-        }else {
+        }else if(res.data?.code === 200) {
             return res
+        }else {
+            msg.err(res.data.msg)
         }
     }
 )

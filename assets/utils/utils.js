@@ -34,7 +34,6 @@ export const gen_router_paths = async (arr) => {
                         icon: element.icon != '' ? await asyncRenderIcon(element.icon) : null
                     })
                 }
-
             } else {
                 result.push({
                     label: element.menuType == 'ITEM' ? element.outline ? () => h(

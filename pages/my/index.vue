@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted} from "vue";
-import {useHead} from "unhead";
+import {useRouter} from "#app";
 import {definePageMeta} from "#imports";
-useHead({
-  title: '致飞网盘-Admin｜仪表板',
-})
 
+const Route = useRouter()
 definePageMeta({
-  name: '仪表板',
+  name: '个人中心',
   parent: null
 });
+
+onMounted(() => {
+  console.log(Route.currentRoute.value)
+})
 </script>
 
 <template>
   <div>
-    dashborad
+    My
   </div>
 </template>
 

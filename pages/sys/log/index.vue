@@ -9,14 +9,13 @@ import {useHead} from "unhead";
 import {definePageMeta} from "#imports";
 
 useHead({
-  title: '致飞网盘-Admin｜日志管理',
+  title: '致飞网盘-Admin｜日志审计',
 })
 
-definePageMeta(
-    {
-      title: '测试'
-    }
-);
+definePageMeta({
+  name: '日志审计',
+  parent: '系统管理'
+});
 
 const height = ref()
 const tb_data = ref([])

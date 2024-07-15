@@ -1,7 +1,4 @@
 {
-  "overrides": {
-    "vue": "latest"
-  },
   "name": "nuxt-app",
   "private": true,
   "type": "module",

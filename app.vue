@@ -8,7 +8,6 @@ const layout = storeToRefs(useLayoutStore()).layout;
 const themeOverrides = theme
 
 onMounted(()=>{
-  console.log('111',process.env)
 })
 </script>
 

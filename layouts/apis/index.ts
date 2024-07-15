@@ -11,7 +11,7 @@ export const logout = () => {
         // @ts-ignore
         user.value = undefined
         layout.value = 'login'
-        msg.success('退出成功')
+        // msg.success('退出成功')
     })
 }
 

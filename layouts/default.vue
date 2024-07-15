@@ -15,7 +15,7 @@ import {useUserStore} from "~/store/UseUserStore";
 import {storeToRefs} from "pinia";
 import * as auth_api from '~/layouts/apis'
 
-
+const links = ref([])
 const user = storeToRefs(useUserStore()).user_info
 const loading = ref(true)
 const router = useRouter();
@@ -23,6 +23,7 @@ const route = useRoute()
 const path = ref()
 const arr = ref([]);
 const loadingBar = useLoadingBar();
+const ele = ref()
 const options = [
   {
     label: '退出登陆',
@@ -64,8 +65,28 @@ watch(() => router.currentRoute.value, () => {
   }, 100)
 })
 
+watch(() => router.currentRoute.value, () => {
+  for (let j = 0; j < links.value.length; j++) {
+    let item = links.value[j]
+    item.checked = false
+  }
+  for (let i = 0; i < links.value.length; i++) {
+    let element = links.value[i]
+    if(element.path == router.currentRoute.value.fullPath){
+      element.checked = true
+      return
+    }
+  }
+  links.value.push({
+    title: router.currentRoute.value.meta.name,
+    path: router.currentRoute.value.fullPath,
+    checked: true
+  })
+})
+
+
 const handleSelect = (key) => {
-  switch (key){
+  switch (key) {
     case 'logout':
       auth_api.logout()
       break
@@ -79,7 +100,7 @@ onMounted(async () => {
     loadingBar.start()
     path.value = router.currentRoute.value.fullPath
   }
-  if(user.value == undefined){
+  if (user.value == undefined) {
     auth_api.logout()
   }
   let genRouterPaths = await gen_router_paths(user.value.menus);
@@ -98,10 +119,27 @@ onMounted(async () => {
   }
 })
 
+
+
+
 const $mount = () => {
   if (process.client) {
     window.$message = useMessage()
     window.$dialog = useDialog()
+    let interval = setInterval(()=>{
+      var elementById = document.getElementById('space');
+      console.log(elementById)
+      if(elementById != null){
+        clearInterval(interval)
+        document.getElementById('space').addEventListener('wheel', (event) => {
+          event.preventDefault();
+          document.getElementById('space').scrollBy({
+            left: event.deltaY < 0 ? -30 : 30,  // >0 是下滑，<0是上滑
+          });
+        });
+      }
+    },100)
+
   }
 }
 
@@ -168,14 +206,24 @@ const change = (e) => {
         <n-layout>
           <n-layout-header bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem">
             <div style="display: flex;justify-content: space-between;align-items: center;width: 100%">
-              <div>123</div>
+              <div>
+                <Bread/>
+              </div>
               <div>
                 <swBtn @change="changeTheme"></swBtn>
               </div>
             </div>
           </n-layout-header>
+          <n-layout-header bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem">
+            <n-space id="space" style="flex-flow: nowrap;overflow: auto">
+              <n-tag @click="navigateTo(item.path)" checkable closable round v-for="item in links" v-model:checked="item.checked" type="info"
+                     style="cursor: pointer;">
+                {{ item.title }}
+              </n-tag>
+            </n-space>
+          </n-layout-header>
           <n-layout-content bordered
-                            style="height: calc(100vh - 6rem);display: flex;align-items: center;padding: 1rem 1rem;width: 100%;">
+                            style="height: calc(100vh - 9rem);display: flex;align-items: center;padding: 1rem 1rem;width: 100%;">
             <NuxtPage/>
           </n-layout-content>
           <n-layout-footer bordered style="height: 3rem;display: flex;align-items: center;padding: 0 0 0 1rem">Powered
@@ -196,14 +244,44 @@ const change = (e) => {
   width: 100%;
 }
 
-:deep(.n-layout-toggle-bar){
+:deep(.n-layout-toggle-bar) {
   right: -24px;
 }
 
-.admin{
+.admin {
   display: flex;
   justify-content: left;
   align-items: center;
   overflow: hidden;
+}
+
+:deep(.n-space) {
+  display: inline;
+  flex-wrap: nowrap;
+  flex-flow: nowrap;
+}
+
+/*定义滚动条高宽及背景
+ 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 16px;
+  height: 0px;
+  background-color: #F5F5F5;
+}
+
+/*定义滚动条轨道
+ 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+/*定义滑块
+ 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #555;
 }
 </style>

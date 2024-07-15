@@ -11,6 +11,11 @@ useHead({
   title: '致飞网盘-Admin｜用户管理',
 })
 
+definePageMeta({
+  name: '用户管理',
+  parent: '系统管理'
+});
+
 const tb_date = ref([])
 const columns = [
   {
@@ -93,7 +98,7 @@ const hand_edit = (row) => {
 const height = ref()
 const init = () => {
   loading.value = true
-  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
+  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 6rem - 10rem)`;
   apis.load_all_users({
     current_page: pagination.page,
     page_size: pagination.pageSize
