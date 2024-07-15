@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted} from "vue";
 import * as apis from "~/pages/sys/user/apis";
-const emits = defineEmits(['success'])
+import {icon_mapping} from "assets/utils/icons";
+import {load_all_roles} from "~/pages/sys/role/apis";
 
+const emits = defineEmits(['success'])
+const roles = ref()
+const role_page_params = reactive({
+  current_page: 1,
+  page_size: 10,
+  total: 0
+})
 const dialog = reactive({
   title: '添加用户',
   open: false,
@@ -10,10 +18,11 @@ const dialog = reactive({
     id: '',
     userName: '',
     password: '',
-    email: ''
+    email: '',
+    role: null
   },
   show: (data)=>{
-    console.log(data)
+    change(1)
     if(data != null){
       Object.assign(dialog.data, data)
       dialog.title = '修改用户'
@@ -22,7 +31,8 @@ const dialog = reactive({
         id: '',
         userName: '',
         password: '',
-        email: ''
+        email: '',
+        role: null
       })
       dialog.title = '添加用户'
     }
@@ -33,7 +43,8 @@ const dialog = reactive({
       id: '',
       userName: '',
       password: '',
-      email: ''
+      email: '',
+      role: null
     })
     dialog.open = false
     dialog.title = '添加用户'
@@ -56,6 +67,14 @@ const dialog = reactive({
 defineExpose({
   dialog
 })
+
+const change = (a)=>{
+  role_page_params.current_page = a
+  load_all_roles(role_page_params).then(res=>{
+    role_page_params.total = res.data.data.total
+    roles.value = res.data.data.data
+  })
+}
 </script>
 
 <template>
@@ -76,6 +95,13 @@ defineExpose({
         </n-form-item>
         <n-form-item label="邮箱">
           <n-input v-model:value="dialog.data.email" placeholder="请输入邮箱"></n-input>
+        </n-form-item>
+        <n-form-item label="角色">
+          <n-select  placeholder="请选择图标" clearable v-model:value="dialog.data.role" value-field="id" label-field="roleName"  :options="roles">
+            <template #action>
+              <n-pagination v-model:page="role_page_params.current_page" :page-size="role_page_params.page_size" @change="change" />
+            </template>
+          </n-select>
         </n-form-item>
       </n-form>
       <template #footer>

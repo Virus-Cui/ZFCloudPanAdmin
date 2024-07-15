@@ -15,22 +15,22 @@ const clear_message_box = ()=>{
 
 export const success = (msg: any)=>{
     clear_message_box()
-    message_box = window.$message.success(msg)
+    message_box = window.$message.success(msg, {duration: 3000})
 }
 
 export const warn = (msg: any)=>{
     clear_message_box()
-    message_box = window.$message.warning(msg, {duration: 0})
+    message_box = window.$message.warning(msg, {duration: 3000})
 }
 
 export const err = (msg: any)=>{
     clear_message_box()
-    message_box = window.$message.error(msg,{duration: 0})
+    message_box = window.$message.error(msg,{duration: 3000})
 }
 
 export const info = (msg: any)=>{
     clear_message_box()
-    message_box = window.$message.info(msg,{duration: 0})
+    message_box = window.$message.info(msg,{duration: 3000})
 }
 
 export const success_dialog = (title, msg)=>{

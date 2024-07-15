@@ -5,6 +5,18 @@ import {Loading3QuartersOutlined, CloseOutlined, PlusOutlined} from '@vicons/ant
 import {NButton, NTag} from "naive-ui";
 import * as apis from './apis'
 import LogInfoDescription from "~/pages/sys/log/components/LogInfoDescription.vue";
+import {useHead} from "unhead";
+import {definePageMeta} from "#imports";
+
+useHead({
+  title: '致飞网盘-Admin｜日志管理',
+})
+
+definePageMeta(
+    {
+      title: '测试'
+    }
+);
 
 const height = ref()
 const tb_data = ref([])
@@ -95,7 +107,6 @@ const init = () => {
   // if(process.client){
   height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
   // }
-  console.log(height.value);
   apis.load_all_logs({
     current_page: pagination.page,
     page_size: pagination.pageSize

@@ -8,6 +8,11 @@ import * as msg from '~/assets/utils/message'
 
 import * as icons from '~/assets/utils/icons'
 import {PlusOutlined} from "@vicons/antd";
+import {useHead} from "unhead";
+
+useHead({
+  title: '致飞网盘-Admin｜菜单管理',
+})
 
 function renderIcon(icon: Component) {
   return h(NIcon, {

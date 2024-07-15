@@ -22,5 +22,12 @@ export default defineNuxtConfig({
                 resolvers: [NaiveUiResolver()], // Automatically register all components in the `components` directory
             }),
         ],
+    },
+    modules: [
+        '@pinia/nuxt',
+        '@pinia-plugin-persistedstate/nuxt',
+    ],
+    piniaPersistedstate: {
+        storage: 'sessionStorage',
     }
 })

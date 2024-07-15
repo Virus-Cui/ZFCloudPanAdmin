@@ -17,23 +17,24 @@ export const gen_router_paths = async (arr) => {
     for (let i = 0; i < arr.length; i++) {
         let element = arr[i];
         if (element.menuRouterPath != null) {
-            console.log(element.icon != null)
             if (element.icon != null) {
-                // element.menuName
-                result.push({
-                    label: element.menuType == 'ITEM' ? element.outline ? () => h(
-                        'a', {
-                            href: element.menuRouterPath,
-                            target: '_blank'
-                        },
-                        element.menuName
-                    ) : () => h(NuxtLink, {
-                        to: element.menuRouterPath
-                    }, element.menuName): element.menuName,
-                    key: element.menuRouterPath,
-                    disabled: element.disable,
-                    icon: element.icon != '' ? await asyncRenderIcon(element.icon) : null
-                })
+                if(element.menuType != 'ACTIVE'){
+                    result.push({
+                        label: element.menuType == 'ITEM' ? element.outline ? () => h(
+                            'a', {
+                                href: element.menuRouterPath,
+                                target: '_blank'
+                            },
+                            element.menuName
+                        ) : () => h(NuxtLink, {
+                            to: element.menuRouterPath
+                        }, element.menuName): element.menuName,
+                        key: element.menuRouterPath,
+                        disabled: element.disable,
+                        icon: element.icon != '' ? await asyncRenderIcon(element.icon) : null
+                    })
+                }
+
             } else {
                 result.push({
                     label: element.menuType == 'ITEM' ? element.outline ? () => h(

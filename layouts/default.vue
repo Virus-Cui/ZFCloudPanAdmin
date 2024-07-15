@@ -4,20 +4,32 @@ import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage
 import swBtn from '@/components/switch.vue'
 import text from '~/components/logo-text.vue'
 import axios from 'axios'
-import {useRouter} from "#app";
+import {useRouter, useRoute} from "#app";
 import LogoSmall from "~/components/logo-small.vue";
 import {gen_router_paths} from "assets/utils/utils.js";
 import NuxtLink from "#app/components/nuxt-link.js";
 import {theme} from '~/assets/config/theme'
 import * as apis from '../pages/sys/menu/apis'
 import {renderIcon} from "assets/utils/icons.js";
+import {useUserStore} from "~/store/UseUserStore";
+import {storeToRefs} from "pinia";
+import * as auth_api from '~/layouts/apis'
 
 
+const user = storeToRefs(useUserStore()).user_info
 const loading = ref(true)
 const router = useRouter();
+const route = useRoute()
 const path = ref()
 const arr = ref([]);
 const loadingBar = useLoadingBar();
+const options = [
+  {
+    label: '退出登陆',
+    key: 'logout',
+    disabled: false
+  }
+]
 // 设置前置路由守卫
 router.beforeEach((to, from, next) => {
   // 路由中导入-开始
@@ -52,18 +64,25 @@ watch(() => router.currentRoute.value, () => {
   }, 100)
 })
 
-
+const handleSelect = (key) => {
+  switch (key){
+    case 'logout':
+      auth_api.logout()
+      break
+  }
+}
 onMounted(async () => {
+  console.log(process.env)
   $mount()
   loading.value = true
   if (process.client) {
     loadingBar.start()
     path.value = router.currentRoute.value.fullPath
   }
-  await apis.load_menus().then(res => {
-    arr.value = res.data.data
-  })
-  let genRouterPaths = await gen_router_paths(arr.value);
+  if(user.value == undefined){
+    auth_api.logout()
+  }
+  let genRouterPaths = await gen_router_paths(user.value.menus);
   genRouterPaths.unshift(header)
   menuOptions.value = genRouterPaths
   loading.value = false
@@ -83,7 +102,6 @@ const $mount = () => {
   if (process.client) {
     window.$message = useMessage()
     window.$dialog = useDialog()
-
   }
 }
 
@@ -98,7 +116,6 @@ const changeTheme = (mode) => {
 
 const change = (e) => {
   if (process.client) {
-    console.log(path.value)
     localStorage.setItem('path', e.target.innerText)
   }
 }
@@ -134,10 +151,12 @@ const change = (e) => {
                 :style="{'position': 'relative', 'z-index': '999', 'height': '3rem'}" class="admin">
               <div v-if="!collapsed" style="display: flex;justify-content: left;align-items: center;width: 100%">
                 <div style="margin: 0 1rem">
-                  <n-avatar src="https://q1.qlogo.cn/g?b=qq&nk=2437916756&s=640"></n-avatar>
+                  <n-dropdown trigger="hover" :options="options" @select="handleSelect">
+                    <n-avatar src="https://q1.qlogo.cn/g?b=qq&nk=2437916756&s=640"></n-avatar>
+                  </n-dropdown>
                 </div>
                 <div>
-                  Admin
+                  {{ user?.username }}
                 </div>
               </div>
               <div v-else style="margin-left: 1rem">

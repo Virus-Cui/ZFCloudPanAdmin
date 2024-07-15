@@ -5,6 +5,11 @@ import {PlusOutlined} from "@vicons/antd";
 import {NButton} from 'naive-ui'
 import * as apis from './apis'
 import RoleDialog from "~/pages/sys/role/dialogs/RoleDialog.vue";
+import {useHead} from "unhead";
+
+useHead({
+  title: '致飞网盘-Admin｜角色管理',
+})
 const height = ref()
 const loading = ref()
 const roleDialog = ref()
@@ -29,7 +34,6 @@ const columns = [
             type: 'warning',
             size: 'small',
             onClick: ()=>{
-              console.log(row);
               roleDialog.value.dialog.show(row)
             }
           }, '编辑'),

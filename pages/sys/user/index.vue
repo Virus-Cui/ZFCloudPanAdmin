@@ -5,6 +5,11 @@ import {NButton} from 'naive-ui'
 import NewUserDialog from "~/pages/sys/user/dialog/NewUserDialog.vue";
 import * as icons from "assets/utils/icons";
 import {PlusOutlined} from "@vicons/antd";
+import {useHead} from "unhead";
+
+useHead({
+  title: '致飞网盘-Admin｜用户管理',
+})
 
 const tb_date = ref([])
 const columns = [

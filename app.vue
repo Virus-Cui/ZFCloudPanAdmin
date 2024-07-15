@@ -2,10 +2,14 @@
 import {onMounted, ref} from "vue";
 import {theme} from '~/assets/config/theme'
 import {NConfigProvider, useMessage} from "naive-ui";
-import FullLoading from '~/components/FullLoading.vue'
+import {useLayoutStore} from "~/store/UseLayoutStore";
+import {storeToRefs} from "pinia";
+const layout = storeToRefs(useLayoutStore()).layout;
 const themeOverrides = theme
 
-const isFullLoading = ref(true)
+onMounted(()=>{
+  console.log('111',process.env)
+})
 </script>
 
 <template>
@@ -15,7 +19,7 @@ const isFullLoading = ref(true)
       <n-dialog-provider>
         <n-message-provider>
           <n-loading-bar-provider>
-            <NuxtLayout>
+            <NuxtLayout :name="layout">
             </NuxtLayout>
           </n-loading-bar-provider>
         </n-message-provider>

@@ -9,6 +9,9 @@ import {NIcon} from "naive-ui";
 const emits = defineEmits(['success'])
 const tree = ref()
 const menus = ref()
+const selectedValues = ref([])
+const selectedLeaves = ref([])
+const safe_mode = ref(true)
 const dialog = reactive({
   title: '创建角色',
   open: false,
@@ -61,7 +64,7 @@ const dialog = reactive({
       dialog.data.menuIds_list.push(ele)
     }
     dialog.data.menuIds = JSON.stringify(dialog.data.menuIds_list)
-    dialog.data.authIds = JSON.stringify(dialog.data.authIds_list)
+    dialog.data.authIds = JSON.stringify(selectedLeaves.value)
     switch (type) {
       case 1:
         apis.new_role(dialog.data).then(res => {
@@ -88,6 +91,45 @@ const render = (opt) => {
     return h(NIcon, null, {default: () => h(ArrowRightOutlined)});
   }
 }
+
+const handleSelect = (value) => {
+  safe_mode.value = false
+  selectedValues.value = value;
+  console.log('Selected Values:', value);
+  // 获取选中的最底层元素
+  const leaves = getSelectedLeaves(menus.value, value);
+  console.log('Selected Leaves:', leaves);
+  let arr = []
+  for (let i = 0; i < leaves.length; i++) {
+    arr.push(leaves[i].id)
+  }
+  selectedLeaves.value = arr
+};
+
+const getSelectedLeaves = (nodes, selectedKeys) => {
+  let leaves = [];
+
+  const findLeaves = (node) => {
+    if (node.treeMenus.length == 0) {
+      if (selectedKeys.includes(node.id)) {
+        leaves.push(node);
+      }
+      return;
+    }
+    if(node.treeMenus.length != 0){
+      node.treeMenus.forEach(child => {
+        findLeaves(child);
+      });
+    }
+
+  };
+
+  nodes.forEach(node => {
+    findLeaves(node);
+  });
+
+  return leaves;
+};
 </script>
 
 <template>
@@ -110,6 +152,7 @@ const render = (opt) => {
               cascade
               placeholder="请选择菜单或者按钮"
               checkable
+              @update:value="handleSelect"
               :options="menus" children-field="treeMenus" key-field="id" label-field="menuName"
               :render-switcher-icon="render" multiple></n-tree-select>
         </n-form-item>
@@ -121,7 +164,7 @@ const render = (opt) => {
           <n-button v-if="dialog.title == '创建角色'" style="margin-left: 1rem" type="primary"
                     @click="dialog.submit(1)">提交
           </n-button>
-          <n-button v-else style="margin-left: 1rem" type="primary" @click="dialog.submit(2)">提交</n-button>
+          <n-button :disabled="safe_mode" v-else style="margin-left: 1rem" type="primary" @click="dialog.submit(2)">提交</n-button>
         </div>
       </template>
     </n-card>
