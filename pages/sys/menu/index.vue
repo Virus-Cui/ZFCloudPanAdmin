@@ -122,8 +122,8 @@ const rowKey = (row) => {
 
 const height = ref()
 const init = () => {
-  // 初始化高度
-  height.value =`calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
+  // 初始化高度querySelector
+  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 6rem - 10rem)`;
   menu_apis.load_menus().then(res => {
     data.value = res.data.data
   })

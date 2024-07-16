@@ -103,9 +103,7 @@ const pagination = reactive({
 const init = () => {
   loading.value = true
   // 初始化高度
-  // if(process.client){
-  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 3rem - 10rem)`;
-  // }
+  height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 6rem - 10rem)`;
   apis.load_all_logs({
     current_page: pagination.page,
     page_size: pagination.pageSize

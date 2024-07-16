@@ -15,17 +15,21 @@ service.interceptors.request.use(config => {
 })
 
 service.interceptors.response.use(
-    (res)=>{
-        if(res.data?.code === 2){
+    (res) => {
+        if (res.data?.code === 2) {
             msg.err(res.data.msg)
             storeToRefs(useLayoutStore()).layout.value = 'login'
-        }else if(res.data?.code === 3){
+        } else if (res.data?.code === 3) {
             msg.warn('权限不足')
             navigateTo('/')
-        }else if(res.data?.code === 200) {
+        } else if (res.data?.code === 200) {
             return res
-        }else {
+        } else {
             msg.err(res.data.msg)
         }
+    }, (err) => {
+        console.log('err',err.message)
+        msg.err(err.message)
+        Promise.reject(err)
     }
 )

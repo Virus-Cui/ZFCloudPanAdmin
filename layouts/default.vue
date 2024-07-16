@@ -1,29 +1,26 @@
 <script setup>
 import {h, ref, onMounted, watch} from "vue";
-import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage, useDialog} from "naive-ui";
+import {NIcon, darkTheme, useOsTheme, NConfigProvider, useLoadingBar, useMessage, useDialog, useNotification} from "naive-ui";
 import swBtn from '@/components/switch.vue'
 import text from '~/components/logo-text.vue'
-import axios from 'axios'
 import {useRouter, useRoute} from "#app";
 import LogoSmall from "~/components/logo-small.vue";
 import {gen_router_paths} from "assets/utils/utils.js";
 import NuxtLink from "#app/components/nuxt-link.js";
 import {theme} from '~/assets/config/theme'
-import * as apis from '../pages/sys/menu/apis'
 import {renderIcon} from "assets/utils/icons.js";
 import {useUserStore} from "~/store/UseUserStore";
 import {storeToRefs} from "pinia";
 import * as auth_api from '~/layouts/apis'
 import {CloseOutlined} from '@vicons/antd'
+import {creatWebSocket} from '@/assets/utils/websocket'
+
 const links = ref([])
 const user = storeToRefs(useUserStore()).user_info
 const loading = ref(true)
 const router = useRouter();
-const route = useRoute()
 const path = ref()
-const arr = ref([]);
 const loadingBar = useLoadingBar();
-const ele = ref()
 const options = [
   {
     label: '退出登陆',
@@ -65,14 +62,17 @@ watch(() => router.currentRoute.value, () => {
   }, 100)
 })
 
-watch(() => router.currentRoute.value, () => {
+const set_item = () => {
+  if (router.currentRoute.value.fullPath == '/') {
+    return;
+  }
   for (let j = 0; j < links.value.length; j++) {
     let item = links.value[j]
     item.checked = false
   }
   for (let i = 0; i < links.value.length; i++) {
     let element = links.value[i]
-    if(element.path == router.currentRoute.value.fullPath){
+    if (element.path == router.currentRoute.value.fullPath) {
       element.checked = true
       return
     }
@@ -82,8 +82,11 @@ watch(() => router.currentRoute.value, () => {
     path: router.currentRoute.value.fullPath,
     checked: true
   })
-})
+}
 
+watch(() => router.currentRoute.value, () => {
+  set_item()
+})
 
 const handleSelect = (key) => {
   switch (key) {
@@ -92,9 +95,8 @@ const handleSelect = (key) => {
       break
   }
 }
-onMounted(async () => {
-  console.log(process.env)
-  $mount()
+
+const init = async () => {
   loading.value = true
   if (process.client) {
     loadingBar.start()
@@ -117,19 +119,29 @@ onMounted(async () => {
   if (process.client) {
     loadingBar.finish()
   }
+}
+
+const init_ws = async () => {
+  creatWebSocket(`ws://127.0.0.1:8080/wsInterface/${user.value.token}`)
+}
+
+onMounted(async () => {
+  $mount()
+  await init()
+  await init_ws()
 })
-
-
 
 
 const $mount = () => {
   if (process.client) {
     window.$message = useMessage()
     window.$dialog = useDialog()
-    let interval = setInterval(()=>{
+    window.$notify = useNotification()
+    set_item()
+    let interval = setInterval(() => {
       var elementById = document.getElementById('space');
       console.log(elementById)
-      if(elementById != null){
+      if (elementById != null) {
         clearInterval(interval)
         document.getElementById('space').addEventListener('wheel', (event) => {
           event.preventDefault();
@@ -138,7 +150,7 @@ const $mount = () => {
           });
         });
       }
-    },100)
+    }, 100)
 
   }
 }
@@ -216,11 +228,12 @@ const change = (e) => {
           </n-layout-header>
           <n-layout-header bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem">
             <n-space id="space" style="flex-flow: nowrap;overflow: auto">
-              <n-tag @click="navigateTo(item.path)" checkable closable round @checkedChange="val=>{
+              <n-tag :disabled="item.checked" @click="navigateTo(item.path)" checkable closable round @checkedChange="val=>{
                return false
               }" v-for="item in links" v-model:checked="item.checked" type="info"
                      style="cursor: pointer;">
-                {{ item.title }} <CloseOutlined style="width: 10px"></CloseOutlined>
+                {{ item.title }}
+                <CloseOutlined style="width: 10px"></CloseOutlined>
               </n-tag>
             </n-space>
           </n-layout-header>

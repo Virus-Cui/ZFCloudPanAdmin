@@ -41,12 +41,6 @@ export const success_dialog = (title, msg)=>{
           positiveText: '确定',
           negativeText: '不确定',
           maskClosable: false,
-          onMaskClick: () => {
-              message.success('不能关闭')
-          },
-          onEsc: () => {
-              message.success('通过 esc 关闭')
-          },
           onNegativeClick: ()=>{
               reject()
           },
@@ -65,12 +59,6 @@ export const warn_dialog = (title, msg)=>{
             positiveText: '确定',
             negativeText: '不确定',
             maskClosable: false,
-            onMaskClick: () => {
-                message.success('不能关闭')
-            },
-            onEsc: () => {
-                message.success('通过 esc 关闭')
-            },
             onNegativeClick: ()=>{
                 reject()
             },
@@ -78,5 +66,38 @@ export const warn_dialog = (title, msg)=>{
                 resolve()
             }
         })
+    })
+}
+
+export const success_notify = (title, msg)=>{
+    window.$notify.success({
+        content: title,
+        meta: msg,
+        duration: 2500,
+        keepAliveOnHover: true
+    })
+}
+export const warning_notify = (title, msg)=>{
+    window.$notify.warning({
+        content: title,
+        meta: msg,
+        duration: 2500,
+        keepAliveOnHover: true
+    })
+}
+export const error_notify = (title, msg)=>{
+    window.$notify.error({
+        content: title,
+        meta: msg,
+        duration: 2500,
+        keepAliveOnHover: true
+    })
+}
+export const info_notify = (title, msg)=>{
+    window.$notify.info({
+        content: title,
+        meta: msg,
+        duration: 2500,
+        keepAliveOnHover: true
     })
 }

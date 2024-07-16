@@ -55,6 +55,7 @@ export const theme = {
     },
     "Tag": {
         "colorCheckedHover": "#5380f5FF",
-        "colorCheckedPressed": "#5380F5FF"
+        "colorCheckedPressed": "#5380F5FF",
+        "opacityDisabled": "1"
     }
 }
