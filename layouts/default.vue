@@ -14,7 +14,7 @@ import {renderIcon} from "assets/utils/icons.js";
 import {useUserStore} from "~/store/UseUserStore";
 import {storeToRefs} from "pinia";
 import * as auth_api from '~/layouts/apis'
-
+import {CloseOutlined} from '@vicons/antd'
 const links = ref([])
 const user = storeToRefs(useUserStore()).user_info
 const loading = ref(true)
@@ -216,9 +216,11 @@ const change = (e) => {
           </n-layout-header>
           <n-layout-header bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem">
             <n-space id="space" style="flex-flow: nowrap;overflow: auto">
-              <n-tag @click="navigateTo(item.path)" checkable closable round v-for="item in links" v-model:checked="item.checked" type="info"
+              <n-tag @click="navigateTo(item.path)" checkable closable round @checkedChange="val=>{
+               return false
+              }" v-for="item in links" v-model:checked="item.checked" type="info"
                      style="cursor: pointer;">
-                {{ item.title }}
+                {{ item.title }} <CloseOutlined style="width: 10px"></CloseOutlined>
               </n-tag>
             </n-space>
           </n-layout-header>

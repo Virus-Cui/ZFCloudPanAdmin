@@ -53,4 +53,8 @@ export const theme = {
     common: {
         primaryColor: '#377cf6',
     },
+    "Tag": {
+        "colorCheckedHover": "#5380f5FF",
+        "colorCheckedPressed": "#5380F5FF"
+    }
 }
