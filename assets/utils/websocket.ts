@@ -15,7 +15,6 @@ export function creatWebSocket(wsUrl: string) {
         console.log("当前浏览器不支持 WebSocket");
     }
 
-
     try {
         create_new_connect(wsUrl); // 初始化websocket连接
     } catch (e) {
@@ -36,8 +35,18 @@ const create_new_connect = (url) => {
     }
 
     instance.onerror = () => {
+        msg.error_notify('系统信息','ws重连')
         re_connect(url)
     }
+
+    let interval = setInterval(()=>{
+        try {
+            instance.send('lifetime')
+        }catch (e){
+            clearInterval(interval);
+            re_connect(url)
+        }
+    },500)
 }
 
 const re_connect = (url) => {
