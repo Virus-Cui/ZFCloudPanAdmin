@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import {useLayoutStore} from "~/store/UseLayoutStore";
 import {useUserStore} from "~/store/UseUserStore";
+import {type Setting, useSettingStore} from "~/store/UseSettingStore";
 import {storeToRefs} from "pinia";
 import {useLoadingBar} from "naive-ui";
-import {reactive} from "vue";
+import {reactive, type Ref} from "vue";
 import * as apis from './apis'
 
 const loadingBar = useLoadingBar();
 loadingBar.finish()
 const layout = storeToRefs(useLayoutStore()).layout
 const user = storeToRefs(useUserStore()).user_info
+const sys_setting:Ref<Setting | any>  = storeToRefs(useSettingStore()).setting
 
+const bg = `url("${sys_setting.value?.loginBgImg}")`
 
 const formdata = reactive({
   username: '',
@@ -27,15 +30,11 @@ const login = ()=>{
 
 <template>
   <div class="login-box">
-    <div class="left">
-
-    </div>
-    <div class="right">
       <div class="login-panel">
         <div style="display: flex;justify-content: center;margin: 1rem 0">
-          <img src="~/assets/img/logo.png" width="200" alt="">
+          <img :src="sys_setting.logo" width="200" alt="">
         </div>
-        <div class="title">登陆 - 致飞网盘｜管理端</div>
+        <div class="title">登陆 - {{sys_setting.title}}｜管理端 </div>
         <div class="form">
           <n-form>
             <n-form-item label="用户名">
@@ -49,8 +48,10 @@ const login = ()=>{
         <div class="btn">
           <n-button style="width: 100%" type="primary" @click="login()">登陆</n-button>
         </div>
+        <div class="footer">
+          <a href="https://blog.mrcsh.cn" class="link">Powered By Virus_Cui</a>
+        </div>
       </div>
-    </div>
 
   </div>
 </template>
@@ -64,10 +65,10 @@ const login = ()=>{
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url('assets/img/login-bk.jpg') no-repeat center;
+  background: v-bind(bg) no-repeat center;
   background-size: cover;
-  .right{
     .login-panel{
+      color: #f5f5f7;
       width: 24rem;
       border-radius: 8px;
       padding: 2rem;
@@ -77,10 +78,23 @@ const login = ()=>{
       background: rgba(255 255 255 / .4);
       .title{
         font-size: 1.2rem;
+        font-weight: 800;
         text-align: center;
         margin: 0 0 1rem 0;
       }
+      .form{
+        :deep(.n-form){
+          .n-form-item-label{
+            .n-form-item-label__text{
+              color: #f5f5f7;
+            }
+          }
+        }
+      }
+      .footer{
+        text-align: center;
+        margin-top: 1rem;
+      }
     }
-  }
 }
 </style>

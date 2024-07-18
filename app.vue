@@ -4,9 +4,20 @@ import {theme} from '~/assets/config/theme'
 import {NConfigProvider, useMessage} from "naive-ui";
 import {useLayoutStore} from "~/store/UseLayoutStore";
 import {storeToRefs} from "pinia";
+import {useSettingStore} from "~/store/UseSettingStore";
+import {load_setting} from "assets/api/sys_setting_api";
 
+const setting = storeToRefs(useSettingStore()).setting
 const layout = storeToRefs(useLayoutStore()).layout;
 const themeOverrides = theme
+
+
+
+onMounted(()=>{
+  load_setting().then(res=>{
+    setting.value = res.data.data
+  })
+})
 </script>
 
 <template>
