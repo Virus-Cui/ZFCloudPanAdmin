@@ -69,7 +69,7 @@ import type { UploadFileInfo } from 'naive-ui'
 <template>
   <div class="box">
 
-    <n-descriptions label-placement="left" title="图像设置" bordered :column="1">
+    <n-descriptions label-placement="left" title="图像设置" bordered :column="1 ">
       <n-descriptions-item label-class="label" label="登录页图片">
         <n-upload
             v-if="show"

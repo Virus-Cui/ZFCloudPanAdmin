@@ -1,6 +1,15 @@
-import {SettingOutlined, AppstoreOutlined, DashboardOutlined, BarChartOutlined, CloudOutlined, UserOutlined} from '@vicons/antd'
+import {
+    SettingOutlined,
+    AppstoreOutlined,
+    DashboardOutlined,
+    BarChartOutlined,
+    CloudOutlined,
+    UserOutlined,
+    FileOutlined
+} from '@vicons/antd'
 import {h} from "vue";
 import {NIcon} from "naive-ui";
+
 export const icon_mapping = [
     {
         label: 'SettingOutlined',
@@ -25,6 +34,10 @@ export const icon_mapping = [
     {
         label: 'UserOutlined',
         value: UserOutlined
+    },
+    {
+        label: 'FileOutlined',
+        value: FileOutlined
     }
 ]
 

@@ -40,3 +40,9 @@ export const new_user = (data) => {
         })
     })
 }
+
+export const kick_user = (id)=>{
+    service.get(`/user/kick?user_id=${id}`).then(res=>{
+        msg.success('踢出成功')
+    })
+}

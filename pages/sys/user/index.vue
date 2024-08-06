@@ -6,6 +6,10 @@ import NewUserDialog from "~/pages/sys/user/dialog/NewUserDialog.vue";
 import * as icons from "assets/utils/icons";
 import {PlusOutlined} from "@vicons/antd";
 import {useHead} from "unhead";
+import {useUserStore} from "~/store/UseUserStore";
+import {storeToRefs} from "pinia";
+
+const user = storeToRefs(useUserStore()).user_info
 
 useHead({
   title: '致飞网盘-Admin｜用户管理',
@@ -43,8 +47,20 @@ const columns = [
             NButton,
             {
               size: "small",
+              type: "warning",
+              disabled: user.value?.username == row.userName,
+              onClick: () => hand_kick(row)
+            },
+            {default: () => '踢出'}
+        ),
+        h(
+            NButton,
+            {
+              size: "small",
               type: "primary",
-              onClick: () => hand_edit(row)
+              onClick: () => hand_edit(row),
+              style: "margin-left: 1rem"
+
             },
             {default: () => '编辑'}
         ),
@@ -94,6 +110,10 @@ const hand_del = (row) => {
 }
 const hand_edit = (row) => {
   drawer.value.dialog.show(row)
+}
+
+const hand_kick = (row)=>{
+  apis.kick_user(row.id)
 }
 const height = ref()
 const init = () => {

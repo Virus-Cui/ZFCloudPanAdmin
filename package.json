@@ -15,6 +15,8 @@
     "@vicons/antd": "^0.12.0",
     "@vicons/ionicons5": "^0.12.0",
     "axios": "^1.7.2",
+    "browser-md5-file": "^1.1.1",
+    "js-file-download": "^0.4.12",
     "nuxt": "^3.12.2",
     "pinia": "^2.1.7",
     "vue": "latest"

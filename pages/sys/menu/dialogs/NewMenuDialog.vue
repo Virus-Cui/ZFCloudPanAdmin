@@ -4,7 +4,6 @@ import * as menu_apis from '../apis'
 import {NAvatar, NIcon, NText, type SelectRenderLabel, type SelectRenderTag, type TreeOption} from "naive-ui";
 import {ChevronForward} from "@vicons/ionicons5";
 import {icon_mapping} from "assets/utils/icons";
-import * as icon from "assets/utils/icons";
 
 const emits = defineEmits(['success'])
 
@@ -128,13 +127,13 @@ const dialog = reactive({
     if(dialog.title == '修改菜单'){
       menu_apis.change_menu(dialog.data).then(res=>{
         dialog.close()
-        location.reload()
+        // location.reload()
         emits('success')
       })
     }else {
       menu_apis.add_menu(dialog.data).then(res=>{
         dialog.close()
-        location.reload()
+        // location.reload()
         emits('success')
       })
     }
@@ -206,7 +205,6 @@ defineExpose({
           <n-button @click="dialog.close()">取消</n-button>
           <n-button style="margin-left: 1rem" type="primary" @click="dialog.submit()">提交</n-button>
         </div>
-
       </template>
     </n-card>
   </n-modal>
