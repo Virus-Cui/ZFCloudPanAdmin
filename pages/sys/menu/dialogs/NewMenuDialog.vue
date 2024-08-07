@@ -89,7 +89,8 @@ const dialog = reactive({
     menuComment: '',
     icon: '',
     outline: '',
-    menuType: ''
+    menuType: 'ITEM',
+    sys: 'sys'
   },
   show: (data)=>{
     if(data != null){
@@ -117,8 +118,9 @@ const dialog = reactive({
       menuPid: '',
       menuComment: '',
       icon: '',
-      menuType: '',
-      outline: ''
+      outline: '',
+      menuType: 'ITEM',
+      sys: 'sys'
     })
     dialog.open = false
   },
@@ -198,6 +200,12 @@ defineExpose({
         </n-form-item>
         <n-form-item label="是否为外链地址">
           <n-switch v-model:value="dialog.data.outline"></n-switch>
+        </n-form-item>
+        <n-form-item label="是否为外链地址">
+          <n-radio-group v-model:value="dialog.data.sys">
+            <n-radio label="管理端" value="sys"></n-radio>
+            <n-radio label="客户端" value="client"></n-radio>
+          </n-radio-group>
         </n-form-item>
       </n-form>
       <template #footer>

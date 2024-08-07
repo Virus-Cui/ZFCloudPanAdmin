@@ -18,7 +18,7 @@ export const logout = () => {
 
 export const login = (data: any) => {
     return new Promise(r => {
-        service.post(`/auth/login`, data).then(res => {
+        service.post(`/auth/login/sys`, data).then(res => {
             const user = storeToRefs(useUserStore()).user_info
             // @ts-ignore
             user.value = res.data.data

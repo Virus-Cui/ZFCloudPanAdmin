@@ -5,7 +5,8 @@ import {
     BarChartOutlined,
     CloudOutlined,
     UserOutlined,
-    FileOutlined
+    FileOutlined,
+    ShareAltOutlined
 } from '@vicons/antd'
 import {h} from "vue";
 import {NIcon} from "naive-ui";
@@ -38,6 +39,10 @@ export const icon_mapping = [
     {
         label: 'FileOutlined',
         value: FileOutlined
+    },
+    {
+        label: 'ShareAltOutlined',
+        value: ShareAltOutlined
     }
 ]
 

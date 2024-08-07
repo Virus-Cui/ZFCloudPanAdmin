@@ -2,7 +2,7 @@
 import {ref, reactive, onMounted, h, type Component} from "vue";
 import NewMenuDialog from "~/pages/sys/menu/dialogs/NewMenuDialog.vue";
 import * as menu_apis from './apis'
-import {NButton, NIcon} from "naive-ui";
+import {NButton, NIcon, NTag} from "naive-ui";
 import * as icon from '~/assets/utils/icons'
 import * as msg from '~/assets/utils/message'
 
@@ -10,6 +10,7 @@ import * as icons from '~/assets/utils/icons'
 import {PlusOutlined} from "@vicons/antd";
 import {useHead} from "unhead";
 import {definePageMeta} from "#imports";
+import MenuSys from "~/pages/sys/menu/components/MenuSys.vue";
 
 useHead({
   title: '致飞网盘-Admin｜菜单管理',
@@ -71,6 +72,16 @@ const columns = [
     title: "菜单备注",
     key: "menuComment",
     minWidth: '200px'
+  },
+  {
+    title: "菜单归属",
+    key: "sys",
+    minWidth: '200px',
+    render(row) {
+      return h(MenuSys, {
+        sys: row.sys
+      }, null)
+    }
   },
   {
     title: "操作",
