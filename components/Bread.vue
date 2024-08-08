@@ -23,7 +23,7 @@ const unit = ref('/')
 
 <template>
   <div>
-    <NuxtLink style="text-decoration: none" to="/dashboard">首页</NuxtLink> <span v-if="current.name != '仪表板'"> {{unit}} </span> <span v-if="current.parent != null"> {{ current.parent }} {{unit}} </span> <span v-if="current.name != '仪表板'">{{ current.name }}</span v-if>
+    <NuxtLink class="link" style="text-decoration: none;" to="/dashboard">首页</NuxtLink> <span v-if="current.name != '仪表板'"> {{unit}} </span> <span v-if="current.parent != null"> {{ current.parent }} {{unit}} </span> <span v-if="current.name != '仪表板'">{{ current.name }}</span v-if>
   </div>
 </template>
 
